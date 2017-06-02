@@ -62,11 +62,11 @@ namespace SortingAlgorithmApi.Controllers
         [HttpPost]
         [ActionName("Complex")]
         [Route("SortData")]
-        public List<int[]> SortData([FromBody] string values)
-        {
-            
-            //return Sort(values);
-            return new List<int[]>();
+        public List<int[]> SortData([FromBody] int[] values)
+        {            
+            //Data needs to be passed as raw json in an array format [10,20,30]
+            return Sort(values);
+            //return new List<int[]>();
         }
         #region private methods
         private bool Compare(int firstVal, int secondVal)
@@ -94,11 +94,11 @@ namespace SortingAlgorithmApi.Controllers
             while (!sorted)
             {
                 var changes = 0;
+                var tempArray = new int[unsortedArray.Length];
+                unsortedArray.CopyTo(tempArray, 0);
+                passList.Add(tempArray);
                 for (int i = 0; i < unsortedArray.Length - 1; i++) //Count -1 so it stops after comparing 9 and 10
-                {
-                    var tempArray = new int[_demoLength];
-                    unsortedArray.CopyTo(tempArray, 0);
-                    passList.Add(tempArray);
+                {                  
                     if (Compare(unsortedArray[i], unsortedArray[i + 1]))
                     {
                         var temp = unsortedArray[i];
@@ -112,6 +112,8 @@ namespace SortingAlgorithmApi.Controllers
                     sorted = true;
                 }
             }
+            //Bubble sort always adds an additional pass where nothing occurs
+            passList.Add(unsortedArray);
             return passList;
         }
         #endregion
